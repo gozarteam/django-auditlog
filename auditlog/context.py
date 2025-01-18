@@ -31,12 +31,12 @@ def set_actor(actor, remote_addr=None, remote_port=None):
         dispatch_uid=context_data["signal_duid"],
         weak=False,
     )
-    m2m_changed.connect(
-        set_actor,
-        sender=LogEntry,
-        dispatch_uid=context_data["signal_duid"],
-        weak=False,
-    )
+    # m2m_changed.connect(
+    #     set_actor,
+    #     sender=LogEntry,
+    #     dispatch_uid=context_data["signal_duid"],
+    #     weak=False,
+    # )
 
     try:
         yield
