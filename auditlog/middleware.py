@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 
 from auditlog.cid import set_cid
 from auditlog.context import set_actor
+from rest_framework_simplejwt import authentication
 
 
 class AuditlogMiddleware:
@@ -51,10 +52,13 @@ class AuditlogMiddleware:
 
     @staticmethod
     def _get_actor(request):
-        user = getattr(request, "user", None)
-        if isinstance(user, get_user_model()):
-            return user
-        return None
+        try:
+            return authentication.JWTAuthentication().authenticate(request)[0]
+        except Exception:
+            user = getattr(request, "user", None)
+            if isinstance(user, get_user_model()):
+                return user
+            return None
 
     def __call__(self, request):
         remote_addr = self._get_remote_addr(request)
