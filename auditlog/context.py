@@ -4,7 +4,7 @@ from contextvars import ContextVar
 from functools import partial
 
 from django.contrib.auth import get_user_model
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, m2m_changed
 
 from auditlog.models import LogEntry
 
@@ -26,6 +26,12 @@ def set_actor(actor, remote_addr=None, remote_port=None):
     # Connect signal for automatic logging
     set_actor = partial(_set_actor, user=actor, signal_duid=context_data["signal_duid"])
     pre_save.connect(
+        set_actor,
+        sender=LogEntry,
+        dispatch_uid=context_data["signal_duid"],
+        weak=False,
+    )
+    m2m_changed.connect(
         set_actor,
         sender=LogEntry,
         dispatch_uid=context_data["signal_duid"],
