@@ -56,7 +56,7 @@ class AuditlogMiddleware:
             return authentication.JWTAuthentication().authenticate(request)[0]
         except Exception:
             user = getattr(request, "user", None)
-            if isinstance(user, get_user_model()):
+            if isinstance(user, get_user_model()) and user.is_authenticated:
                 return user
             return None
 
