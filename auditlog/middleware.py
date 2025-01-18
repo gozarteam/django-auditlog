@@ -52,7 +52,7 @@ class AuditlogMiddleware:
     @staticmethod
     def _get_actor(request):
         user = getattr(request, "user", None)
-        if isinstance(user, get_user_model()) and user.is_authenticated:
+        if isinstance(user, get_user_model()):
             return user
         return None
 
